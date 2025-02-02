@@ -60,8 +60,36 @@ source .env
 
 2. Run the script:
 
+Basic usage:
+
 ```bash
 python3 screpa.py
+```
+
+Advanced usage with arguments:
+
+```bash
+python3 screpa.py "search keyword" number_of_pages
+```
+
+Examples:
+
+- Search for "real estate" companies across 2 pages (default)
+
+```bash
+python3 screpa.py
+```
+
+- Search for "software" companies across 5 pages
+
+```bash
+python3 screpa.py "software" 5
+```
+
+Search for "software" companies across 2 pages
+
+```bash
+python3 screpa.py "software"
 ```
 
 ## Features

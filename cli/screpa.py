@@ -1,10 +1,11 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 """Screpa is a web scraping tool for Xing company search results"""
 
 import os
 import re
 import csv
 import time
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict
@@ -18,6 +19,7 @@ class Screpa:
         self.has_accepted_privacy = False
         self.results_dir = Path("results")
         self.results_dir.mkdir(exist_ok=True)
+        self.results_per_page = 10  # Standard number of results per page
 
     def handle_privacy_consent(self, page, max_attempts=3):
         """Try to handle privacy consent dialog multiple times"""
@@ -30,7 +32,7 @@ class Screpa:
                     time.sleep(1)
                     self.has_accepted_privacy = True
                     return True
-            except:
+            except:  # noqa: E722
                 time.sleep(2)  # Wait before next attempt
         return False
 
@@ -274,9 +276,14 @@ class Screpa:
                 print(f"Error clicking 'Show more': {str(e)}")
                 break
 
-    def scrape_xing(self, keyword: str, pages: int = 3) -> List[Dict]:
+    def scrape_xing(self, keyword: str, pages: int = 2) -> List[Dict]:
         """Handle browser automation and HTML saving with pagination"""
         all_results = []
+        total_possible_results = pages * self.results_per_page
+
+        print(
+            f"\nSearching for '{keyword}' companies (up to {total_possible_results} results)..."
+        )
 
         with sync_playwright() as p:
             browser = p.chromium.launch(
@@ -303,20 +310,18 @@ class Screpa:
                 html_content = page.content()
                 initial_results = self.extract_search_results(html_content)
                 all_results.extend(initial_results)
-                print(f"Found {len(initial_results)} results on initial page")
+                print(f"Page 1: Found {len(initial_results)} results")
 
                 # Click "Show more" button for remaining pages
                 for page_num in range(2, pages + 1):
-                    print(f"Loading page {page_num}...")
+                    print(f"\nLoading page {page_num}...")
                     try:
                         show_more = page.get_by_role("button", name="Show more")
                         if show_more.is_visible(timeout=5000):
                             show_more.click()
                             print(f"Clicked 'Show more' button for page {page_num}")
-                            # Wait for new results to load
                             time.sleep(5)
 
-                            # Extract results from new page
                             html_content = page.content()
                             page_results = self.extract_search_results(html_content)
                             new_results = [
@@ -324,10 +329,13 @@ class Screpa:
                             ]
                             all_results.extend(new_results)
                             print(
-                                f"Found {len(new_results)} new results on page {page_num}"
+                                f"Page {page_num}: Found {len(new_results)} new results"
+                            )
+                            print(
+                                f"Total results so far: {len(all_results)} of {total_possible_results}"
                             )
                         else:
-                            print("No more results to load")
+                            print("No more results available")
                             break
                     except Exception as e:
                         print(f"Error loading page {page_num}: {str(e)}")
@@ -415,14 +423,35 @@ if __name__ == "__main__":
     scraper = Screpa()
     print("Screpa Lead Generator v1.0.0")
 
+    # Handle command line arguments
     keyword = "real estate"
-    print(f"Searching for {keyword} companies...")
+    pages = 2
+
+    if len(sys.argv) > 1:
+        # Get keyword (use empty input to keep default)
+        input_keyword = sys.argv[1].strip()
+        if input_keyword:
+            keyword = input_keyword
+
+    if len(sys.argv) > 2:
+        # Get number of pages (use empty input to keep default)
+        try:
+            input_pages = int(sys.argv[2])
+            if input_pages > 0:
+                pages = input_pages
+        except ValueError:
+            print(f"Invalid page number, using default: {pages}")
+
+    print("Configuration:")
+    print(f"- Search keyword: {keyword}")
+    print(f"- Number of pages to scrape: {pages}")
+    print(f"- Maximum possible results: {pages * scraper.results_per_page}")
 
     try:
-        results = scraper.scrape_xing(keyword, pages=3)
+        results = scraper.scrape_xing(keyword, pages)
         scraper.save_to_csv(results)
-        print(f"Saved {len(results)} leads")
+        print(f"\nCompleted! Saved {len(results)} leads to CSV")
         if results:
-            print("Sample lead:", results[0])
+            print("\nSample lead:", results[0])
     except Exception as e:
         print(f"Error: {str(e)}")
