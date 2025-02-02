@@ -14,6 +14,8 @@ from bs4 import BeautifulSoup
 
 
 class Screpa:
+    """Screpa class for Xing company search scraping"""
+
     def __init__(self):
         self.base_url = "https://www.xing.com"
         self.has_accepted_privacy = False
