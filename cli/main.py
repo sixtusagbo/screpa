@@ -1,12 +1,16 @@
 #!/usr/env python3
 """Screpa CLI tool"""
 
-import typer
+from typer import Typer
+
+app = Typer()
 
 
-def main(name: str):
+@app.command()
+def hello(name: str):
+    """Says Hello to an entity"""
     print(f"Hello {name}")
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    app()
