@@ -26,5 +26,18 @@ def goodbye(name: str, formal: bool = False):
         print(f"Bye {name}!")
 
 
+@app.command()
+def greet(name: str, lastname: str = "", formal: bool = False):
+    """
+    Greet NAME, optionally with a --lastname.
+
+    If --formal is used, greet very formally.
+    """
+    if formal:
+        print(f"Good day Ms. {name} {lastname}.")
+    else:
+        print(f"Hello {name} {lastname}")
+
+
 if __name__ == "__main__":
     app()
