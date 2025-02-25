@@ -75,5 +75,12 @@ def table():
     console.print(table)
 
 
+@app.command()
+def stderror():
+    """Standard error"""
+    err_console = Console(stderr=True)
+    err_console.print("This is written in standard error")
+
+
 if __name__ == "__main__":
     app()
