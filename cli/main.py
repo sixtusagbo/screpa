@@ -5,6 +5,7 @@ from typer import Typer
 from rich import print
 from rich.console import Console
 from rich.table import Table
+import typer
 
 app = Typer()
 console = Console()
@@ -80,6 +81,21 @@ def stderror():
     """Standard error"""
     err_console = Console(stderr=True)
     err_console.print("This is written in standard error")
+
+
+@app.command()
+def typerstyle(good: bool = True):
+    """Combining typer.style() with typer.echo()
+
+    typer.echo() is just click.echo() under the hood
+    """
+    message_start = "everything is "
+    if good:
+        ending = typer.style("good", fg=typer.colors.GREEN, bold=True)
+    else:
+        ending = typer.style("bad", fg=typer.colors.WHITE, bg=typer.colors.RED)
+    message = message_start + ending
+    typer.echo(message)
 
 
 if __name__ == "__main__":
