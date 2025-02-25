@@ -55,5 +55,13 @@ def printing():
     print(data)
 
 
+@app.command()
+def markup():
+    """Custom markup, even emojis! Woah!"""
+    print(
+        "[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:"
+    )
+
+
 if __name__ == "__main__":
     app()
