@@ -98,5 +98,11 @@ def typerstyle(good: bool = True):
     typer.echo(message)
 
 
+@app.command()
+def styleandprint(name: str = "Sixtus"):
+    """Styling and printing with typer.secho()"""
+    typer.secho(f"Welcome here {name}", fg=typer.colors.CYAN, bold=True)
+
+
 if __name__ == "__main__":
     app()
