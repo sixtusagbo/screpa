@@ -3,8 +3,11 @@
 
 from typer import Typer
 from rich import print
+from rich.console import Console
+from rich.table import Table
 
 app = Typer()
+console = Console()
 
 data = {
     "name": "Rick",
@@ -61,6 +64,15 @@ def markup():
     print(
         "[bold red]Alert![/bold red] [green]Portal gun[/green] shooting! :boom:"
     )
+
+
+@app.command()
+def table():
+    """Table printing"""
+    table = Table("Name", "Item")
+    table.add_row("Rick", "Portal Gun")
+    table.add_row("Morty", "Planetina")
+    console.print(table)
 
 
 if __name__ == "__main__":
