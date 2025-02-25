@@ -2,8 +2,17 @@
 """Screpa CLI tool"""
 
 from typer import Typer
+from rich import print
 
 app = Typer()
+
+data = {
+    "name": "Rick",
+    "age": 42,
+    "items": [{"name": "Portal Gun"}, {"name": "Plumbus"}],
+    "active": True,
+    "affiliation": None,
+}
 
 
 @app.command()
@@ -37,6 +46,13 @@ def greet(name: str, lastname: str = "", formal: bool = False):
         print(f"Good day Ms. {name} {lastname}.")
     else:
         print(f"Hello {name} {lastname}")
+
+
+@app.command()
+def printing():
+    """Printing and colors"""
+    print("Here's the data:")
+    print(data)
 
 
 if __name__ == "__main__":
