@@ -9,7 +9,7 @@ def maybe_create_user(username: str):
         raise typer.Exit()
     elif username == "root":
         print("The root user is reserved")
-        raise typer.Exit(code=1)
+        raise typer.Abort()
     else:
         print(f"User created: {username}")
 
