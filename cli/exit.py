@@ -7,6 +7,9 @@ def maybe_create_user(username: str):
     if username in existing_usernames:
         print("The user already exists")
         raise typer.Exit()
+    elif username == "root":
+        print("The root user is reserved")
+        raise typer.Exit(code=1)
     else:
         print(f"User created: {username}")
 
