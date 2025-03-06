@@ -1,6 +1,6 @@
 import typer
 
-existing_usernames = ["rick", "morty"]
+existing_usernames = ["rick", "morty", "sixtus"]
 
 
 def maybe_create_user(username: str):
