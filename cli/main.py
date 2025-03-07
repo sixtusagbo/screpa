@@ -73,6 +73,8 @@ def table():
     table = Table("Name", "Item")
     table.add_row("Rick", "Portal Gun")
     table.add_row("Morty", "Planetina")
+    table.add_row("Summer", "Mr. Meeseeks Box")
+    table.add_row("Sixtus", "Computer")
     console.print(table)
 
 
@@ -89,7 +91,7 @@ def typerstyle(good: bool = True):
 
     typer.echo() is just click.echo() under the hood
     """
-    message_start = "everything is "
+    message_start = "Everything is "
     if good:
         ending = typer.style("good", fg=typer.colors.GREEN, bold=True)
     else:
